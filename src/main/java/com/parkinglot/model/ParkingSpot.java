@@ -40,4 +40,7 @@ public class ParkingSpot {
         }
         this.vehicle = null;
     }
+    public boolean isAvailable() {
+        return this.vehicle == null;
+    }
 }

@@ -1,7 +1,7 @@
 package com.parkinglot.model;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 public class ParkingLot {
     private final String lotId;
     private final Map<Integer, ParkingFloor> parkingFloors;
@@ -11,7 +11,7 @@ public class ParkingLot {
             throw new IllegalArgumentException("Lot ID cannot be null or empty.");
         }
         this.lotId = lotId;
-        this.parkingFloors = new HashMap<>();
+        this.parkingFloors = new TreeMap<>();
     }
 
     public void addParkingFloor(ParkingFloor parkingFloor){
