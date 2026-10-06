@@ -8,6 +8,7 @@ public class ParkingTicket {
     private final long entryTime;
     private TicketStatus ticketStatus;
     private long exitTime;
+    private long fee;
 
     public ParkingTicket(String ticketId, Vehicle vehicle, ParkingSpot parkingSpot, long entryTime) {
         if(ticketId == null || ticketId.isEmpty()) {
@@ -28,15 +29,20 @@ public class ParkingTicket {
         this.entryTime = entryTime;
         this.exitTime = -1; // Initialize exit time to -1 indicating the vehicle is still parked
         this.ticketStatus = TicketStatus.ACTIVE;
+        this.fee = -1;
     }
-    public void markAsCompleted(long exitTime) {
+    public void markAsCompleted(long exitTime, long fee) {
         if (this.ticketStatus == TicketStatus.COMPLETED) {
             throw new IllegalStateException("Ticket is already completed.");
         }
         if(exitTime < entryTime) {
             throw new IllegalArgumentException("Exit time cannot be before entry time.");
         }
+        if (fee < 0) {
+            throw new IllegalArgumentException("Fee cannot be negative.");
+        }
         this.exitTime = exitTime;
+        this.fee = fee;
         this.ticketStatus = TicketStatus.COMPLETED;
     }
 
@@ -64,4 +70,7 @@ public class ParkingTicket {
         return exitTime;
     }
 
+    public long getFee() {
+        return fee;
+    }
 }

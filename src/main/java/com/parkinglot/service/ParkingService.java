@@ -3,6 +3,7 @@ import java.time.Clock;
 import java.util.UUID;
 
 import com.parkinglot.enums.TicketStatus;
+import com.parkinglot.fee.FeeCalculator;
 import com.parkinglot.model.ParkingLot;
 import com.parkinglot.model.ParkingTicket;
 import com.parkinglot.model.Vehicle;
@@ -15,8 +16,9 @@ public class ParkingService {
     private final SpotAllocationStrategy spotAllocationStrategy;
     private final TicketRepository ticketRepository;
     private final Clock clock;
+    private final FeeCalculator feeCalculator;
 
-    public ParkingService(ParkingLot parkingLot, SpotAllocationStrategy spotAllocationStrategy, TicketRepository ticketRepository, Clock clock) {
+    public ParkingService(ParkingLot parkingLot, SpotAllocationStrategy spotAllocationStrategy, TicketRepository ticketRepository, Clock clock, FeeCalculator feeCalculator) {
         if (parkingLot == null) {
             throw new IllegalArgumentException("Parking lot cannot be null.");
         }
@@ -29,10 +31,14 @@ public class ParkingService {
         if (clock == null) {
             throw new IllegalArgumentException("Clock cannot be null.");
         }
+        if (feeCalculator == null) {
+            throw new IllegalArgumentException("Fee calculator cannot be null.");
+        }
         this.parkingLot = parkingLot;
         this.spotAllocationStrategy = spotAllocationStrategy;
         this.ticketRepository = ticketRepository;
         this.clock = clock;
+        this.feeCalculator = feeCalculator;
     }
 
     public ParkingTicket parkVehicle(Vehicle vehicle) {
@@ -52,7 +58,7 @@ public class ParkingService {
 
     }
 
-    public void unparkVehicle( String ticketId) {
+    public long unparkVehicle( String ticketId) {
         if(ticketId == null || ticketId.isEmpty()) {
             throw new IllegalArgumentException("Ticket ID cannot be null or empty.");
         }
@@ -64,6 +70,8 @@ public class ParkingService {
         long exitTime = clock.millis();
         ticket.getParkingSpot().removeVehicle();
         ticket.markAsCompleted(exitTime);
+        long fee = feeCalculator.calculateFee(ticket);
+        return fee;
     }
 
 }
