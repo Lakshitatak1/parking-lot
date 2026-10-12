@@ -16,12 +16,11 @@ public class HourlyFeeCalculator implements FeeCalculator {
     }
 
     @Override
-    public long calculateFee(ParkingTicket ticket) {
+    public long calculateFee(ParkingTicket ticket, long exitTime) {
         if (ticket == null) {
             throw new IllegalArgumentException("Parking ticket cannot be null.");
         }
         long entryTime = ticket.getEntryTime();
-        long exitTime = ticket.getExitTime();
         if (exitTime < entryTime) {
             throw new IllegalArgumentException("Exit time cannot be earlier than entry time.");
         }

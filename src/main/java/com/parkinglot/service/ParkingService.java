@@ -68,9 +68,9 @@ public class ParkingService {
             throw new IllegalStateException("Ticket is already completed.");
         }
         long exitTime = clock.millis();
+        long fee = feeCalculator.calculateFee(ticket, exitTime);
         ticket.getParkingSpot().removeVehicle();
-        ticket.markAsCompleted(exitTime);
-        long fee = feeCalculator.calculateFee(ticket);
+        ticket.markAsCompleted(exitTime, fee);
         return fee;
     }
 
